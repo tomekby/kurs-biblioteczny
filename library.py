@@ -25,25 +25,25 @@ with session() as c:
             request = c.post(SITE_URL, data=payload)
             # Zmienne pomocnicze
             test = BeautifulStoneSoup(request.text)
-            last_name = ''
-            max_val = 0
+            last_input_name = ''
+            correct_answer = 0
             payload_test = {}
             # Przetwarzanie kolejnych pytań
             for radio_inputs in test.findAll('input', {'type': 'radio'}):
                 # Nie przetwarzamy wielokrotnie tego samego pytania
-                if radio_inputs.get('name') == last_name:
+                if radio_inputs.get('name') == last_input_name:
                     continue
-                if last_name != '':
-                    payload_test[last_name] = max_val
-                last_name = radio_inputs.get('name')
-                max_val = int(radio_inputs.get('value'))
+                if last_input_name != '':
+                    payload_test[last_input_name] = correct_answer
+                last_input_name = radio_inputs.get('name')
+                correct_answer = int(radio_inputs.get('value'))
                 # Szukanie odpowiedzi na pytanie o największej wartości
-                for input in test.findAll('input', {'name': last_name}):
+                for input in test.findAll('input', {'name': last_input_name}):
                     # czy to jest najmniejsza wartość odpowiedzi?
-                    if int(input.get('value')) <= max_val:
-                        max_val = int(input.get('value'))
+                    if int(input.get('value')) <= correct_answer:
+                        correct_answer = int(input.get('value'))
             # Uzupełnienie dla ostatniego formularza
-            payload_test[last_name] = max_val
+            payload_test[last_input_name] = correct_answer
             # Uzupełnienie payload'u odpowienimi danymi
             payload_test['sprawdz'] = 'Wyślij'
             payload_test.update(payload)
