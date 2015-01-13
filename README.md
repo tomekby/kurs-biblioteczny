@@ -7,6 +7,6 @@ Imię i nazwisko powinny być wpisane wielkimi literami.
   
 Wymagania
 ---------
-* python 2.x
-* BeautifulSoup
+* python 3.x
+* BeautifulSoup4
 * requests
