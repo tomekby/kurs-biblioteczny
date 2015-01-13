@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from requests import session, codes
-from BeautifulSoup import BeautifulStoneSoup
+from bs4 import BeautifulSoup
 
 SITE_URL = 'http://szkolenie.bg.pg.gda.pl/'
 
@@ -16,7 +16,7 @@ payload = {
 
 with session() as c:
     request = c.post(SITE_URL, data=payload)
-    soup = BeautifulStoneSoup(request.text)
+    soup = BeautifulSoup(request.text)
     del payload['zaloguj']
     for buttons in soup.findAll('button'):
         if buttons.get('name') == 'id_test': # To jest jeden z testów
@@ -24,7 +24,7 @@ with session() as c:
             # Pobranie pytań
             request = c.post(SITE_URL, data=payload)
             # Zmienne pomocnicze
-            test = BeautifulStoneSoup(request.text)
+            test = BeautifulSoup(request.text)
             last_input_name = ''
             correct_answer = 0
             payload_test = {}
@@ -49,9 +49,9 @@ with session() as c:
             payload_test.update(payload)
             # Zapis wyników
             if c.post(SITE_URL, data=payload_test).status_code == codes.ok:
-                print '[INFO] Test rozwiazany'
+                print('[INFO] Test rozwiazany')
             else:
-                print '[ERROR] Blad podczas rozwiazywania testu'
+                print('[ERROR] Blad podczas rozwiazywania testu')
         else: # nie jest ID testu to nas nie obchodzi → nie ten przycisk
             pass
-    print '[INFO] Wszystkie testy rozwiazane'
+    print('[INFO] Wszystkie testy rozwiazane')
